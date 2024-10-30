@@ -41,13 +41,13 @@ impl Attester for SnpAttester {
         let mut firmware = Firmware::open()?;
         let data = report_data.as_slice().try_into()?;
 
-        let (report, certs) = firmware
-            .get_ext_report(None, Some(data), Some(0))
+        let report = firmware
+            .get_report(None, Some(data), Some(0))
             .context("Failed to get attestation report")?;
 
         let evidence = SnpEvidence {
             attestation_report: report,
-            cert_chain: certs,
+            cert_chain: None,
         };
 
         serde_json::to_string(&evidence).context("Serialize SNP evidence failed")
